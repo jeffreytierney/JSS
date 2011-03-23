@@ -1,17 +1,24 @@
 (function(g) {
+  // global object to expose to the world
   g["JSS"] = {
     test: test,
     load: load,
     loadIf: loadIf
   };
   
+  // some helpers, inspired by jQuery's css property name handling
   var rdashAlpha = /-([a-z])/ig;
   function camel(str) { return str.replace(rdashAlpha, camelUp); }
   function camelUp(all,letter) { return letter.toUpperCase(); }
   function upper(str) { if(!str) { return "";} var first = str.charAt(0); return first.toUpperCase()+str.substr(1);}
   
-  function test(prop, val) {
-    var w3_jsprop = camel(prop);
+  // if you want to test whether a browser supports a specific css property / transition / etc
+  // pass in the name of the property, and a valid value for that property, 
+  // as an object (ex: {prop:"transition", val:"color 1s linear"})
+  // and you will get back either an object that you can use going forward to handle js events, css definitions, etc (if supported)
+  // or null (not supported)
+  function test(test_obj) {
+    var w3_jsprop = camel(test_obj.prop);
     var js_prop = upper(w3_jsprop);
     
     var css3 = {
@@ -49,11 +56,14 @@
     
     var div, style, js_style, ret=null;
     try {
+      // loops through test object, creating a div and setting the properly prefixed test style for each browser
+      // then checks to see if that added property sticks around after being set
+      // if so, short circuit the tests, and return the object that we are currently checking
       for(var trans_type in css3) {
         style = css3[trans_type].style;
         js_style = css3[trans_type].js_style;
         var div = document.createElement('div');
-        div.setAttribute('style',style+prop+":"+val+";");
+        div.setAttribute('style',style+test_obj.prop+":"+test_obj.val+";");
         if(js_style in div.style) {
           ret = css3[trans_type];
           break;
@@ -65,10 +75,11 @@
     return ret;
   };
   
+  // takes a javascript object literal, and optionally a vendor prefix for setting vendor specific styles
   function load(css_obj, vendor) {
     vendor = vendor || "";
     var style_obj;
-    // if there is not already a stylesheet to be used for the app (first time this gets created)
+    // if there is not already a stylesheet to be used for the app (first time this gets created) create one
     if(!document.getElementById("app_stylesheet")) {
       var style_el = document.createElement("style");
       style_el.setAttribute("id", "app_stylesheet");
@@ -84,8 +95,10 @@
     if(css_obj) {
       //cycle through all of the classes
       for(var selector in css_obj) {
-        var property = "", val = "", obj;
-        // cycle through each property for the definition
+        var styles = "", val = "", obj;
+        // you can either define a set of styles for a selector as a single string
+        // or as a child object with each property / value as a key / value pair of that object
+        // if its an object, we need to iterate and build a single long string to set
         if(typeof css_obj[selector] === "object") {
           obj = css_obj[selector];
           for (var each_prop in obj) {
@@ -93,27 +106,26 @@
             val = val.replace(/_vendor_/ig, vendor);
             
             each_prop = each_prop.replace(/_vendor_/ig, vendor);
-            
-            if(each_prop != "_") { property += each_prop + ": " + val + "; "; }
-            else { property += val; }
+            styles += each_prop + ": " + val + "; ";
             
           }
           obj = null;
         }
+        // otherwise, we just need to use what we are given
         else {
           val = css_obj[selector];
           val = val.replace(/_vendor_/ig, vendor);
-          property += val;
+          styles += val;
         }
         selector = selector.replace(/_vendor_/ig, vendor);
 
         // add it in, and of course be nice to all browsers that handle it differently
         try {
           if (style_obj.insertRule) {
-            style_obj.insertRule(selector + ' {' + property + '}', style_obj.cssRules.length);
+            style_obj.insertRule(selector + ' {' + styles + '}', style_obj.cssRules.length);
           }
           else if (style_obj.addRule){
-            style_obj.addRule(selector, ' {' + property + '}');
+            style_obj.addRule(selector, ' {' + styles + '}');
           }
         }catch(ex) {}
       
@@ -121,11 +133,14 @@
     }
   };
   
+  // if you have styles you only want to conditionally add if they are supported, you can combine the calls
+  // and pass a test_obj that has a 
   function loadIf(test_obj, css_obj) {
-    if(!test_obj.prop || !test_obj.val) { return null; }
-    var trans = test(test_obj.prop, test_obj.val);
+    css_obj = css_obj || test_obj.css;
+    if(!test_obj.prop || !test_obj.val || !css_obj) { return null; }
+    var trans = test(test_obj);
     if (trans) { load(css_obj, trans.style); }
     return trans;
-  }
+  };
   
 })(this);

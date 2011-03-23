@@ -27,9 +27,8 @@
   
 
   for(var test in tests) {
-    var trans = JSS.test(tests[test].prop,tests[test].val);
+    var trans = (tests[test].css ? JSS.loadIf(tests[test]) : JSS.test(tests[test]));
     log(trans, test+":");
-    if(trans && tests[test].css) { JSS.load(tests[test].css, trans.style)}
   }  
   
   function log(str, desc) {
