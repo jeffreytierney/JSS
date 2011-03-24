@@ -75,3 +75,58 @@ JSS.css takes 1 parameter, an object literal that contains all of your css rules
           "margin":"20px"
         }
     });
+    
+### JSS.cssIf(test_obj, [css, else_css])
+JSS.css takes as many as 3 params, and as few as 1... the `test_obj` param should be an object literal that has `prop` and `val` properties just like the argument to JSS.test method above
+You can either add a `css` property to that object, or pass the css_obj that you want added if the test passes as a second parameter.  (a css_obj is required, whether you add it as the `css` property of the test object or as its own parameter);
+Finally, you can optionally add an `else_css` object in which is a css_object that contains rules you want to apply if the test fails.  This is completely optional, and can also be added as its own argument, or as an `else_css` property on the test_obj parameter
+
+This method returns the results of the test, just as it would if you had only called JSS.test.
+
+    JSS.cssIf({
+      prop:"transition", val:"color 1s linear",
+      css: {
+        "#app.slide .page":{
+          "_vendor_transform": "translate(0%, 0%)",
+          "_vendor_transition": "_vendor_transform 500ms linear"
+        },
+        "#app.slide .old": {
+          "_vendor_transform": "translate(-100%, 0%)"
+        },
+        "#app.slide .new": {
+          "_vendor_transform": "translate(100%, 0%)"
+        }
+      },
+      else_css: {
+        "body": {
+          "background-color": "#FF0000"
+        }
+      }
+    });
+    
+and 
+    JSS.cssIf(
+      {prop:"transition", val:"color 1s linear"},
+      {
+        "#app.slide .page":{
+          "_vendor_transform": "translate(0%, 0%)",
+          "_vendor_transition": "_vendor_transform 500ms linear"
+        },
+        "#app.slide .old": {
+          "_vendor_transform": "translate(-100%, 0%)"
+        },
+        "#app.slide .new": {
+          "_vendor_transform": "translate(100%, 0%)"
+        }
+      },
+      {
+        "body": {
+          "background-color": "#FF0000"
+        }
+      }
+    );
+    
+will give you the same results.
+
+### JSS.g
+This is not a method, but just an empty object that you can use to store any variables or methods that you might want to reuse in your css creation...
