@@ -1,9 +1,10 @@
 (function(g) {
   // global object to expose to the world
   g["JSS"] = {
+    g: {},
     test: test,
-    load: load,
-    loadIf: loadIf
+    css: css,
+    cssIf: cssIf
   };
   
   // some helpers, inspired by jQuery's css property name handling
@@ -76,7 +77,7 @@
   };
   
   // takes a javascript object literal, and optionally a vendor prefix for setting vendor specific styles
-  function load(css_obj, vendor) {
+  function css(css_obj, vendor) {
     vendor = vendor || "";
     var style_obj;
     // if there is not already a stylesheet to be used for the app (first time this gets created) create one
@@ -135,11 +136,11 @@
   
   // if you have styles you only want to conditionally add if they are supported, you can combine the calls
   // and pass a test_obj that has a 
-  function loadIf(test_obj, css_obj) {
+  function cssIf(test_obj, css_obj) {
     css_obj = css_obj || test_obj.css;
     if(!test_obj.prop || !test_obj.val || !css_obj) { return null; }
     var trans = test(test_obj);
-    if (trans) { load(css_obj, trans.style); }
+    if (trans) { css(css_obj, trans.style); }
     return trans;
   };
   
