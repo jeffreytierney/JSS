@@ -136,11 +136,15 @@
   
   // if you have styles you only want to conditionally add if they are supported, you can combine the calls
   // and pass a test_obj that has a 
-  function cssIf(test_obj, css_obj) {
-    css_obj = css_obj || test_obj.css;
-    if(!test_obj.prop || !test_obj.val || !css_obj) { return null; }
+  function cssIf(test_obj, css_obj, else_obj) {
+    else_obj = test_obj.else_css || else_obj || ("css" in test_obj && css_obj);
+    css_obj = test_obj.css || css_obj;
+    if(!test_obj.prop || !test_obj.val || !css_obj) {
+      return null; 
+    }
     var trans = test(test_obj);
     if (trans) { css(css_obj, trans.style); }
+    else if(else_obj) { css(else_obj); }
     return trans;
   };
   

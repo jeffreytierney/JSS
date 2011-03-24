@@ -15,6 +15,11 @@
         "#app.slide .new": {
           "_vendor_transform": "translate(100%, 0%)"
         }
+      },
+      else_css: {
+        "body": {
+          "background-color": "#FF0000"
+        }
       }
     },
     "backface-visibility": {
@@ -48,12 +53,14 @@
   }
   
 
+  JSS.css(css_obj);
+
+
   for(var test in tests) {
     var trans = (tests[test].css ? JSS.cssIf(tests[test]) : JSS.test(tests[test]));
     log(trans, test+":");
   }  
   
-  JSS.css(css_obj);
   
   function log(str, desc) {
     desc = desc || "";

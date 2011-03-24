@@ -35,11 +35,44 @@ apply in multiple places, and again only have to worry about updating them in on
 Finally, since you are creating real document style rules, you can take advantage of the cascading nature of css. 
 For example: If you have a ul with 4 li elements floated left, with the width set to 25% each, but you want to add a 5th, and have them all 
 take on a width of 20%, here is what you would do with jquery (or any css selector based js lib, not to pick on jquery):
-$("ul li").css({width:"20%"});
+
+`$("ul li").css({width:"20%"});`
+
 And Here is what you would do with JSS:
-JSS.css({"ul li":{width:"20%"}});
+
+`JSS.css({"ul li":{width:"20%"}});`
 
 Its about the same as far as statement length goes, but what happens afterwards is where the benefit comes into play...
 The first one will iterate over each matching element, setting an inline style value directly on the element, and triggering a document reflow each time.
 The second, JSS version, will add the style rule to the document, causing a single reflow, during which the new value will be applied to all matching elements at once.
+
+## How do i use JSS?
+
+JSS's interface is simple... there are only 3 methods (and one of them is a convenience method that combines the other two for you).
+The only methods available are JSS.test, JSS.css, and JSS.cssIf.
+
+### JSS.test(test_obj)
+JSS.test takes 1 parameter, an object literal that should have two properties, `test_obj.prop` and `test_obj.val`.  
+`prop` is the name of the vendor prefixed property that you want to test a browser for (such as "transition")
+and value is a valid value for that property (such as "color 1s linear").  If the browser supports it, you will get returned an object
+that contains the proper vendor prefix, the proper vendor javascript property that you can use, as well as the proper vendor-prefixed transition / animation end event that you can listen for.
+
+`JSS.test({prop:"transition", val:"color 1s linear"});`
+
+### JSS.css(css_obj)
+JSS.css takes 1 parameter, an object literal that contains all of your css rules to be added.
+
+`JSS.css({
+    "body": {
+      "background-color": "#000000",
+      "color": "#DCDCDC"
+    },
+    "#output": {
+      "color": "#FFF",
+      "font-size":"16px",
+      "border":"1px solid #FFF",
+      "padding":"20px",
+      "margin":"20px"
+    }
+});`
 
