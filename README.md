@@ -62,7 +62,7 @@ that contains the proper vendor prefix, the proper vendor javascript property th
 ### JSS.css(css_obj)
 JSS.css takes 1 parameter, an object literal that contains all of your css rules to be added.
 
-   JSS.css({
+    JSS.css({
         "body": {
           "background-color": "#000000",
           "color": "#DCDCDC"
