@@ -68,7 +68,7 @@
         if(js_style in div.style) {
           ret = css3[trans_type];
           break;
-        }
+        } 
         div = null;
       }
     }catch(ex) {}
@@ -83,13 +83,18 @@
     // if there is not already a stylesheet to be used for the app (first time this gets created) create one
     if(!document.getElementById("app_stylesheet")) {
       var style_el = document.createElement("style");
-      style_el.setAttribute("id", "app_stylesheet");
-      style_el.setAttribute("type", "text/css");
+      //style_el.setAttribute("id", "app_stylesheet");
+      //style_el.setAttribute("type", "text/css");
+      style_el.id = "app_stylesheet";
+      style_el.type = "text/css";
       document.getElementsByTagName("head")[0].appendChild(style_el);
       style_obj = document.getElementById("app_stylesheet").sheet;
     }
     else {
       style_obj = document.getElementById("app_stylesheet").sheet;
+    }
+    if(!style_obj) {
+      style_obj = document.styleSheets[document.styleSheets.length - 1];
     }
   
     // presumably this check is not necessary, but hey
@@ -126,7 +131,7 @@
             style_obj.insertRule(selector + ' {' + styles + '}', style_obj.cssRules.length);
           }
           else if (style_obj.addRule){
-            style_obj.addRule(selector, ' {' + styles + '}');
+            style_obj.addRule(selector, styles, -1);
           }
         }catch(ex) {}
       
