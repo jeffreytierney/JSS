@@ -13,6 +13,10 @@
   function camelUp(all,letter) { return letter.toUpperCase(); }
   function upper(str) { if(!str) { return "";} var first = str.charAt(0); return first.toUpperCase()+str.substr(1);}
   
+  // should come up with a better way to blacklist certain false positives for certain browsers
+  // i hate doing it this way
+  var is_ie8 = !!(navigator.userAgent.indexOf("MSIE 8") > -1);
+  
   // if you want to test whether a browser supports a specific css property / transition / etc
   // pass in the name of the property, and a valid value for that property, 
   // as an object (ex: {prop:"transition", val:"color 1s linear"})
@@ -66,6 +70,9 @@
         var div = document.createElement('div');
         div.setAttribute('style',style+test_obj.prop+":"+test_obj.val+";");
         if(js_style in div.style) {
+          // should come up with a better way to blacklist certain false positives for certain browsers
+          // i hate doing it this way
+          if(is_ie8 && test_obj.prop.toLowerCase() === "transition") { continue; }
           ret = css3[trans_type];
           break;
         } 

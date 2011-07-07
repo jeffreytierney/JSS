@@ -35,6 +35,12 @@
           "_vendor_border-radius":"5px;"
         }
       }
+    },
+    "text-shadow" : {
+      prop:"text-shadow",val:"rgba(0,0,0,.5)"
+    },
+    "background-color": {
+      prop:"background-color",val:"#000"
     }
   };
   
@@ -67,6 +73,7 @@
     if(typeof str == "object" && g.JSON && g.JSON.stringify) { str = JSON.stringify(str);}
     output.innerHTML += desc + str+"<br/><br/>";
   }
+  
   
   
 })(this);
