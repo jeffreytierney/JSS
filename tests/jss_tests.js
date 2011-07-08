@@ -41,6 +41,9 @@
     },
     "background-color": {
       prop:"background-color",val:"#000"
+    },
+    "transform": {
+      prop:"transform",val:"translateX(0px)"
     }
   };
   

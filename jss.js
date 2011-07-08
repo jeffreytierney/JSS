@@ -72,7 +72,7 @@
         if(js_style in div.style) {
           // should come up with a better way to blacklist certain false positives for certain browsers
           // i hate doing it this way
-          if(is_ie8 && test_obj.prop.toLowerCase() === "transition") { continue; }
+          if(is_ie8 && (test_obj.prop.toLowerCase() === "transition" || test_obj.prop.toLowerCase() === "transform")) { continue; }
           ret = css3[trans_type];
           break;
         } 
